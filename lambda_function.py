@@ -83,7 +83,8 @@ def lambda_handler(event, context):
         return {
             'statusCode': 200,
             'body': json.dumps({
-                'Message': 'Success!!'
+                'Message': 'Success!!',
+                'file_name': pdf_file
             })
         }
     if http_method == 'POST':
