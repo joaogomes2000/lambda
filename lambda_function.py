@@ -46,9 +46,8 @@ def lambda_handler(event, context):
     http_method = event['requestContext']['http']['method']
     if http_method == "GET":
         bucket_name = os.getenv('Bucket_Name')
-        file_path = os.getenv('FILE_PATH')
+        
         logger.info(f'bucket_name = {bucket_name}')
-        logger.info(f'file_path = {file_path}')
         mydict = { "name": "John", "address": "Highway 38", 'used': False }
 
         logger.info('Getting the secret key and the access key')
@@ -68,9 +67,10 @@ def lambda_handler(event, context):
         pdf.cell(200, 10, txt='Purchase completed successfully', ln=True)
         pdf.cell(200, 10, txt='Price 20', ln=True)
         pdf.image('/tmp/teste.png', x=10, y=30, w=50, h=50)
-        pdf_file = f"/tmp/teste123.pdf"
+        pdf_file = "/tmp/sample.pdf"
         pdf.output(pdf_file, 'F')
         s3 = boto3.client('s3',  aws_access_key_id = aws_access_key_id, aws_secret_access_key = aws_secret_access_key)
+        file_path = f'pdf/{str(x.inserted_id)}sample.pdf'
         try:
             s3.upload_file(pdf_file, bucket_name, file_path)
         except Exception as err:
