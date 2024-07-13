@@ -30,14 +30,14 @@ def verify_qrcode(_id):
         return {
                     'statusCode': 200,
                     'body': json.dumps({
-                        'Message': 'Success!!'
+                        'Message': f'Success!! for _id {_id}'
                     })
                 }
     else:
         return {
                     'statusCode': 500,
                     'body': json.dumps({
-                        'Message': 'Success!!'
+                        'Message': f'No values updates for _id {_id}!!'
                     })
                 }
     
@@ -68,7 +68,7 @@ def lambda_handler(event, context):
         pdf.cell(200, 10, txt='Purchase completed successfully', ln=True)
         pdf.cell(200, 10, txt='Price 20', ln=True)
         pdf.image('/tmp/teste.png', x=10, y=30, w=50, h=50)
-        pdf_file = f"/tmp/{x.inserted_id}sample.pdf"
+        pdf_file = f"/tmp/{str(x.inserted_id)}sample.pdf"
         pdf.output(pdf_file, 'F')
         s3 = boto3.client('s3',  aws_access_key_id = aws_access_key_id, aws_secret_access_key = aws_secret_access_key)
         try:
