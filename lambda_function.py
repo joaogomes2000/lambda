@@ -2,38 +2,27 @@ import base64
 import io
 import json
 import os
-
-from flask import Flask, send_file
+import logging
 import segno
 from fpdf import FPDF
 import boto3
-
+logger = logging.getLogger()
+logger.setLevel("INFO")
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
-uri = "mongodb+srv://jonybigude100:P9zlPB2aYSDxgEye@cluster0.m36npri.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+uri = os.getenv('CONN')
 client = MongoClient(uri, server_api=ServerApi('1'))
 db = client.teste
 coll = db.teste
-app = Flask(__name__)
 
-@app.route('/generate', methods=['GET'])
-def generate_pdf():
-    mydict = {"name": "John", "address": "Highway 38"}
-    x = coll.insert_one(mydict)
-    a = coll.find_one(sort=[('$natural', -1)])
-
-    qrcode = segno.make_qr(f'{x.inserted_id}')
-    qrcode_file = "/tmp/teste.png"  # Save to /tmp directory
-    qrcode.save(qrcode_file, scale=5, light="red")
-
-    return send_file(qrcode_file, as_attachment=True)
-
-
-
-@app.route('/', methods=['GET'])
 def lambda_handler(event, context):
+    bucket_name = os.getenv('Bucket_Name')
+    file_path = os.getenv('FILE_PATH')
+    logger.info(f'bucket_name = {bucket_name}')
+    logger.info(f'file_path = {file_path}')
     mydict = { "name": "John", "address": "Highway 38" }
+
     x = coll.insert_one(mydict)
     a = coll.find_one(sort=[('$natural', -1)])
 
@@ -48,17 +37,23 @@ def lambda_handler(event, context):
     # Add text to PDF
     pdf.cell(200, 10, txt='Purchase completed successfully', ln=True)
     pdf.cell(200, 10, txt='Price 20', ln=True)
+    pdf.image('/tmp/teste.png', x=10, y=30, w=50, h=50)
     pdf_file = "/tmp/sample.pdf"
     pdf.output(pdf_file, 'F')
     s3 = boto3.client('s3')
     print('tem')
     try:
-        s3.upload_file('/tmp/teste.png', 'testejoaogomes2024', '/pdf/teste.png')
+        s3.upload_file(pdf_file, bucket_name, file_path)
     except Exception as err:
-        print(err)
+        return {
+        'statusCode': 500,
+        'body': json.dumps({
+            'Message': f'{str(err)}'
+        })}
 
     return {
-        'statusCode': 200
+        'statusCode': 200,
+        'body': json.dumps({
+            'Message': 'Success'
+        })
     }
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=4000)
