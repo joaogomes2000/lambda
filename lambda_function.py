@@ -54,7 +54,7 @@ def lambda_handler(event, context):
         logger.info('Getting the secret key and the access key')
         aws_access_key_id = os.getenv('ACCESSKEY')
         aws_secret_access_key = os.getenv('SECRETKEY')
-        coll.insert_one(mydict)
+        x = coll.insert_one(mydict)
     
         qrcode = segno.make_qr(f'{x.inserted_id}')
         qrcode.save("/tmp/teste.png", scale=5, light="red")
