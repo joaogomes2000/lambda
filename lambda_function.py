@@ -2,7 +2,8 @@ import json
 import os
 import logging
 import segno
-from fpdf import FPDF
+from reportlab.pdfgen import canvas
+from reportlab.lib import colors
 import boto3
 logger = logging.getLogger()
 logger.setLevel("INFO")
@@ -58,22 +59,36 @@ def lambda_handler(event, context):
         qrcode = segno.make_qr(f'{x.inserted_id}')
         qrcode.save("/tmp/teste.png", scale=5, light="red")
 
-        pdf = FPDF()
-        pdf.set_title('Sample PDF')
-        pdf.add_page()
-        pdf.add_font("DejaVu", "", "/var/task/DejaVuSansCondensed.ttf", uni=True)
-        pdf.set_font("DejaVu", "", 12)
+        fileName = '/tmp/sample.pdf'
+        documentTitle = 'sample'
+        subTitle = 'Purchase'
+        textLines = [
+            'Purchase completed successfully',
+            'Price: 20€',
+        ]
+        image = '/tmp/teste.png'
 
-        # Add text to PDF
-        pdf.cell(200, 10, txt='Purchase completed successfully', ln=True)
-        pdf.cell(200, 10, txt='Price: 20€', ln=True)
-        pdf.image('/tmp/teste.png', x=10, y=30, w=50, h=50)
-        pdf_file = "/tmp/sample.pdf"
-        pdf.output(pdf_file, 'F')
+        pdf = canvas.Canvas(fileName)
+        pdf.setTitle(documentTitle)
+        pdf.setFillColorRGB(0, 0, 255)
+        pdf.setFont("Courier-Bold", 24)
+        pdf.drawCentredString(300, 770, subTitle)
+        pdf.line(30, 750, 550, 750)
+        text = pdf.beginText(40, 720)
+        text.setFont("Courier", 18)
+        text.setFillColor(colors.red)
+        
+        for line in textLines:
+            text.textLine(line)
+            
+        pdf.drawText(text)
+        pdf.drawInlineImage(image, 120, 400)
+        pdf.save()
+
         s3 = boto3.client('s3',  aws_access_key_id = aws_access_key_id, aws_secret_access_key = aws_secret_access_key)
         file_path = f'pdf/{str(x.inserted_id)}_sample.pdf'
         try:
-            s3.upload_file(pdf_file, bucket_name, file_path)
+            s3.upload_file(fileName, bucket_name, file_path)
         except Exception as err:
             return {
             'statusCode': 500,
@@ -85,7 +100,7 @@ def lambda_handler(event, context):
             'statusCode': 200,
             'body': json.dumps({
                 'Message': 'Success!!',
-                'file_name': pdf_file
+                'file_name': fileName
             })
         }
     if http_method == 'POST':
