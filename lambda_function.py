@@ -49,7 +49,7 @@ def lambda_handler(event, context):
         file_path = os.getenv('FILE_PATH')
         logger.info(f'bucket_name = {bucket_name}')
         logger.info(f'file_path = {file_path}')
-        mydict = { "name": "John", "address": "Highway 38", 'used': True }
+        mydict = { "name": "John", "address": "Highway 38", 'used': False }
 
         logger.info('Getting the secret key and the access key')
         aws_access_key_id = os.getenv('ACCESSKEY')
@@ -95,6 +95,7 @@ def lambda_handler(event, context):
                 'body': json.dumps({'message': 'Invalid JSON'})
             }
         _id = body.get('id')
+        logger.info(f'id: {_id}')
         verify_qrcode(_id)
         
     return {
