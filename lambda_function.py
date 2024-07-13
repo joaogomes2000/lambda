@@ -20,7 +20,7 @@ coll = db.teste
 
 def verify_qrcode(_id):
     res = coll.find_one({'_id': ObjectId(str(_id))})
-    if res:
+    if res and res.get('used') is False:
         query = {"_id": ObjectId(str(_id))}
         new_val = {"$set": {"used": True}}
         result = coll.update_one(query, new_val)
