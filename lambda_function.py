@@ -112,10 +112,5 @@ def lambda_handler(event, context):
                 'body': json.dumps({'message': 'Invalid JSON'})
             }
         _id = body.get('id')
-        logger.info(f'id: {_id}')
-        verify_qrcode(_id)
-        
-    return {
-        'statusCode': 200,
-        'body': json.dumps('Success')
-    }
+        logger.info(f'id: {_id}')  
+        return verify_qrcode(_id)
