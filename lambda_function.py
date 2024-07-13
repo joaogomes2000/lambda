@@ -65,12 +65,12 @@ def lambda_handler(event, context):
 
         # Add text to PDF
         pdf.cell(200, 10, txt='Purchase completed successfully', ln=True)
-        pdf.cell(200, 10, txt='Price 20', ln=True)
+        pdf.cell(200, 10, txt='Price: 20€', ln=True)
         pdf.image('/tmp/teste.png', x=10, y=30, w=50, h=50)
         pdf_file = "/tmp/sample.pdf"
         pdf.output(pdf_file, 'F')
         s3 = boto3.client('s3',  aws_access_key_id = aws_access_key_id, aws_secret_access_key = aws_secret_access_key)
-        file_path = f'pdf/{str(x.inserted_id)}sample.pdf'
+        file_path = f'pdf/{str(x.inserted_id)}_sample.pdf'
         try:
             s3.upload_file(pdf_file, bucket_name, file_path)
         except Exception as err:
