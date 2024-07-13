@@ -61,7 +61,8 @@ def lambda_handler(event, context):
         pdf = FPDF()
         pdf.set_title('Sample PDF')
         pdf.add_page()
-        pdf.set_font("Arial", '', size=12)
+        pdf.add_font('Arial', '', 'path/to/Arial.ttf', uni=True)
+        pdf.set_font('Arial', '', 12)
 
         # Add text to PDF
         pdf.cell(200, 10, txt='Purchase completed successfully', ln=True)
