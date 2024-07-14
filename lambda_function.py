@@ -117,7 +117,7 @@ def lambda_handler(event, context):
             'body': json.dumps({
                 'headers': headers,
                 'Message': 'Success!!',
-                'file_name': fileName
+                'file_name': file_path.split('/')[-1]
             })}
         
     if http_method == 'POST':
