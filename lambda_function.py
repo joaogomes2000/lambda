@@ -105,6 +105,7 @@ def lambda_handler(event, context):
         except Exception as err:
             return {
             'statusCode': 500,
+            'headers': headers,
             'body': json.dumps({
                 'headers': headers,
                 'Message': f'{str(err)}'
@@ -112,6 +113,7 @@ def lambda_handler(event, context):
 
         return {
             'statusCode': 200,
+            'headers': headers,
             'body': json.dumps({
                 'headers': headers,
                 'Message': 'Success!!',
@@ -124,7 +126,7 @@ def lambda_handler(event, context):
         except json.JSONDecodeError:
             return {
                 'statusCode': 400,
-                
+                'headers': headers,
                 'body': json.dumps({'headers': headers,'message': 'Invalid JSON'})
                 }
         _id = body.get('id')
