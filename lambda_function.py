@@ -32,23 +32,14 @@ def verify_qrcode(_id):
                     'statusCode': 200,
                     'body': json.dumps({
                         'Message': f'Success!! for _id {_id}'
-                    }),
-                'headers': {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': 'Content-Type',
-                'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
-            }}
+                    })}
     else:
         return {
                     'statusCode': 500,
                     'body': json.dumps({
                         'Message': f'No values updates for _id {_id}!!'
-                    }),
-                'headers': {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': 'Content-Type',
-                'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
-            }}
+                    })
+            }
     
 
 def lambda_handler(event, context):
@@ -107,7 +98,6 @@ def lambda_handler(event, context):
             'statusCode': 500,
             'headers': headers,
             'body': json.dumps({
-                'headers': headers,
                 'Message': f'{str(err)}'
             })}
 
@@ -115,7 +105,6 @@ def lambda_handler(event, context):
             'statusCode': 200,
             'headers': headers,
             'body': json.dumps({
-                'headers': headers,
                 'Message': 'Success!!',
                 'file_name': file_path.split('/')[-1]
             })}
@@ -127,7 +116,7 @@ def lambda_handler(event, context):
             return {
                 'statusCode': 400,
                 'headers': headers,
-                'body': json.dumps({'headers': headers,'message': 'Invalid JSON'})
+                'body': json.dumps({'message': 'Invalid JSON'})
                 }
         _id = body.get('id')
         logger.info(f'id: {_id}')  
