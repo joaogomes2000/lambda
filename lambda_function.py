@@ -100,13 +100,20 @@ def lambda_handler(event, context):
             'body': json.dumps({
                 'Message': f'{str(err)}'
             })}
+        url = s3.generate_presigned_url(
+            ClientMethod='get_object',
+            Params={'Bucket': bucket_name, 'Key': file_path},
+            ExpiresIn=3600
+        )
 
+        print(f'Download URL: {url}')
         return {
             'statusCode': 200,
             'headers': headers,
             'body': json.dumps({
                 'Message': 'Success!!',
-                'file_name': file_path.split('/')[-1]
+                'file_name': file_path.split('/')[-1],
+                'url': url
             })}
         
     if http_method == 'POST':
