@@ -32,15 +32,23 @@ def verify_qrcode(_id):
                     'statusCode': 200,
                     'body': json.dumps({
                         'Message': f'Success!! for _id {_id}'
-                    })
-                }
+                    }),
+                'headers': {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Content-Type',
+                'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
+            }}
     else:
         return {
                     'statusCode': 500,
                     'body': json.dumps({
                         'Message': f'No values updates for _id {_id}!!'
-                    })
-                }
+                    }),
+                'headers': {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Content-Type',
+                'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
+            }}
     
 
 def lambda_handler(event, context):
@@ -94,23 +102,37 @@ def lambda_handler(event, context):
             'statusCode': 500,
             'body': json.dumps({
                 'Message': f'{str(err)}'
-            })}
+            }),
+                'headers': {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Content-Type',
+                'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
+            }}
 
         return {
             'statusCode': 200,
             'body': json.dumps({
                 'Message': 'Success!!',
                 'file_name': fileName
-            })
-        }
+            }),
+                'headers': {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Content-Type',
+                'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
+            }}
+        
     if http_method == 'POST':
         try:
             body = json.loads(event.get('body', '{}'))
         except json.JSONDecodeError:
             return {
                 'statusCode': 400,
-                'body': json.dumps({'message': 'Invalid JSON'})
-            }
+                'body': json.dumps({'message': 'Invalid JSON'}),
+                'headers': {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Content-Type',
+                'Access-Control-Allow-Methods': 'POST,GET'
+            }}
         _id = body.get('id')
         logger.info(f'id: {_id}')  
         return verify_qrcode(_id)
