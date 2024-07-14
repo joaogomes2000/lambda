@@ -54,6 +54,11 @@ def verify_qrcode(_id):
 def lambda_handler(event, context):
     http_method = event['requestContext']['http']['method']
     if http_method == "GET":
+        headers = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        }
         bucket_name = os.getenv('Bucket_Name')
         
         logger.info(f'bucket_name = {bucket_name}')
@@ -100,26 +105,18 @@ def lambda_handler(event, context):
         except Exception as err:
             return {
             'statusCode': 500,
+            'headers': headers,
             'body': json.dumps({
                 'Message': f'{str(err)}'
-            }),
-                'headers': {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': 'Content-Type',
-                'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
-            }}
+            })}
 
         return {
             'statusCode': 200,
+            'headers': headers,
             'body': json.dumps({
                 'Message': 'Success!!',
                 'file_name': fileName
-            }),
-                'headers': {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': 'Content-Type',
-                'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
-            }}
+            })}
         
     if http_method == 'POST':
         try:
@@ -127,12 +124,9 @@ def lambda_handler(event, context):
         except json.JSONDecodeError:
             return {
                 'statusCode': 400,
-                'body': json.dumps({'message': 'Invalid JSON'}),
-                'headers': {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': 'Content-Type',
-                'Access-Control-Allow-Methods': 'POST,GET'
-            }}
+                'headers': headers,
+                'body': json.dumps({'message': 'Invalid JSON'})
+                }
         _id = body.get('id')
         logger.info(f'id: {_id}')  
         return verify_qrcode(_id)
