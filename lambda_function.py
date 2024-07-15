@@ -89,7 +89,7 @@ def lambda_handler(event, context):
             text.textLine(line)
             
         pdf.drawText(text)
-        pdf.drawInlineImage(image, 120, 550)
+        pdf.drawInlineImage(image, 100, 450)
         pdf.save()
 
         s3 = boto3.client('s3',  aws_access_key_id = aws_access_key_id, aws_secret_access_key = aws_secret_access_key)
