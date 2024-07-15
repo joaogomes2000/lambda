@@ -96,7 +96,7 @@ def lambda_handler(event, context):
 
         s3 = boto3.client('s3',  aws_access_key_id = aws_access_key_id, aws_secret_access_key = aws_secret_access_key)
         current_date_str = datetime.now().strftime("%Y%m%d%H%M%S")
-        file_path = f'pdf/{str(current_date_str)}_{name}_ticket.pdf'
+        file_path = f'pdf/{str(current_date_str)}{str(x.inserted_id)}_{name.replace(' ', '_')}_ticket.pdf'
         try:
             s3.upload_file(fileName, bucket_name, file_path)
         except Exception as err:
