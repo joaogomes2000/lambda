@@ -87,9 +87,9 @@ def lambda_handler(event, context):
         pdf.save()
 
         s3 = boto3.client('s3',  aws_access_key_id = aws_access_key_id, aws_secret_access_key = aws_secret_access_key)
-        current_date_str = datetime.now().strftime("%Y-%m-%d-%H-%M")
+        current_date_str = datetime.now().strftime("%d%m%y%H%M%S")
         # Parse the current date string
-        current_date = datetime.strptime(current_date_str, "%Y-%m-%d-%H-%M")
+        current_date = datetime.strptime(current_date_str, "%d%m%y%H%M%S")
         file_path = f'pdf/{str(current_date)}_sample.pdf'
         try:
             s3.upload_file(fileName, bucket_name, file_path)
