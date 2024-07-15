@@ -10,6 +10,8 @@ logger.setLevel("INFO")
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from bson.objectid import ObjectId
+from datetime import datetime
+
 
 # Load environment variables from .env file
 
@@ -85,7 +87,10 @@ def lambda_handler(event, context):
         pdf.save()
 
         s3 = boto3.client('s3',  aws_access_key_id = aws_access_key_id, aws_secret_access_key = aws_secret_access_key)
-        file_path = f'pdf/{str(x.inserted_id)}_sample.pdf'
+        current_date_str = datetime.now().strftime("%Y-%m-%d-%H-%M")
+        # Parse the current date string
+        current_date = datetime.strptime(current_date_str, "%Y-%m-%d-%H-%M")
+        file_path = f'pdf/{str(current_date)}_sample.pdf'
         try:
             s3.upload_file(fileName, bucket_name, file_path)
         except Exception as err:
@@ -99,8 +104,6 @@ def lambda_handler(event, context):
             Params={'Bucket': bucket_name, 'Key': file_path},
             ExpiresIn=3600
         )
-
-        print(f'Download URL: {url}')
         return {
             'statusCode': 200,
             'body': json.dumps({
