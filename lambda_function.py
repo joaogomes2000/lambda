@@ -68,6 +68,7 @@ def lambda_handler(event, context):
         subTitle = 'Purchase'
         textLines = [
             'Purchase completed successfully',
+            f'name: {name}',
             'Price: 20€',
         ]
         image = '/tmp/teste.png'
