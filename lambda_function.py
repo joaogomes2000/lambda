@@ -47,8 +47,8 @@ def verify_qrcode(_id):
 def lambda_handler(event, context):
     http_method = event['requestContext']['http']['method']
     if http_method == "GET":
-        query_params = event['queryStringParameters']
-        name = query_params.get('name')
+
+        name = 'João Gomes'
         bucket_name = os.getenv('Bucket_Name')
         
         logger.info(f'bucket_name = {bucket_name}')
