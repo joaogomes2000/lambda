@@ -47,14 +47,8 @@ def verify_qrcode(_id):
 def lambda_handler(event, context):
     http_method = event['requestContext']['http']['method']
     if http_method == "GET":
-        try:
-            body = event['pathParameters']
-        except json.JSONDecodeError:
-            return {
-                'statusCode': 400,
-                'body': json.dumps({'message': 'Invalid JSON'})
-                }
-        name = body.get('name')
+        query_params = event['queryStringParameters']
+        name = query_params.get('name')
         bucket_name = os.getenv('Bucket_Name')
         
         logger.info(f'bucket_name = {bucket_name}')
