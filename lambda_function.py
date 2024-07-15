@@ -46,9 +46,9 @@ def lambda_handler(event, context):
     http_method = event['requestContext']['http']['method']
     if http_method == "GET":
         headers = {
-        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Origin': 'http://localhost:3000',
         'Access-Control-Allow-Methods': 'GET, POST',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With, Access-Control-Allow-Origin',
+        'Access-Control-Allow-Headers': 'content-type, x-amz-date, authorization, x-api-key, x-requested-with',
         'Access-Control-Allow-Credentials': 'true'
         }
         bucket_name = os.getenv('Bucket_Name')
