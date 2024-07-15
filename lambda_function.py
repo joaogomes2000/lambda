@@ -48,7 +48,7 @@ def lambda_handler(event, context):
     http_method = event['requestContext']['http']['method']
     if http_method == "GET":
         try:
-            body = json.loads(event.get('body', '{}'))
+            body = event['pathParameters']
         except json.JSONDecodeError:
             return {
                 'statusCode': 400,
