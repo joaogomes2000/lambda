@@ -54,7 +54,8 @@ def lambda_handler(event, context):
         bucket_name = os.getenv('Bucket_Name')
         
         logger.info(f'bucket_name = {bucket_name}')
-        mydict = { "name": client_name, "employeeName": employee_name, 'used': False }
+        price = '20'
+        mydict = { "name": client_name, "employeeName": employee_name, 'price': price ,'used': False }
 
         logger.info('Getting the secret key and the access key')
         aws_access_key_id = os.getenv('ACCESSKEY')
@@ -70,7 +71,7 @@ def lambda_handler(event, context):
         textLines = [
             'Purchase completed successfully',
             f'name: {client_name}',
-            'Price: 20€',
+            f'Price: {price}',
         ]
         image = '/tmp/teste.png'
 
