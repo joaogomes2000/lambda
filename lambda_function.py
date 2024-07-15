@@ -45,12 +45,6 @@ def verify_qrcode(_id):
 def lambda_handler(event, context):
     http_method = event['requestContext']['http']['method']
     if http_method == "GET":
-        headers = {
-        'Access-Control-Allow-Origin': 'http://localhost:3000',
-        'Access-Control-Allow-Methods': 'GET, POST',
-        'Access-Control-Allow-Headers': 'content-type, x-amz-date, authorization, x-api-key, x-requested-with',
-        'Access-Control-Allow-Credentials': 'true'
-        }
         bucket_name = os.getenv('Bucket_Name')
         
         logger.info(f'bucket_name = {bucket_name}')
@@ -97,7 +91,6 @@ def lambda_handler(event, context):
         except Exception as err:
             return {
             'statusCode': 500,
-            'headers': headers,
             'body': json.dumps({
                 'Message': f'{str(err)}'
             })}
@@ -110,7 +103,6 @@ def lambda_handler(event, context):
         print(f'Download URL: {url}')
         return {
             'statusCode': 200,
-            'headers': headers,
             'body': json.dumps({
                 'Message': 'Success!!',
                 'file_name': file_path.split('/')[-1],
@@ -123,7 +115,6 @@ def lambda_handler(event, context):
         except json.JSONDecodeError:
             return {
                 'statusCode': 400,
-                'headers': headers,
                 'body': json.dumps({'message': 'Invalid JSON'})
                 }
         _id = body.get('id')
