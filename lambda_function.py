@@ -47,10 +47,18 @@ def verify_qrcode(_id):
 def lambda_handler(event, context):
     http_method = event['requestContext']['http']['method']
     if http_method == "GET":
+        try:
+            body = json.loads(event.get('body', '{}'))
+        except json.JSONDecodeError:
+            return {
+                'statusCode': 400,
+                'body': json.dumps({'message': 'Invalid JSON'})
+                }
+        name = body.get('name')
         bucket_name = os.getenv('Bucket_Name')
         
         logger.info(f'bucket_name = {bucket_name}')
-        mydict = { "name": "John", "address": "Highway 38", 'used': False }
+        mydict = { "name": name, "address": "Highway 38", 'used': False }
 
         logger.info('Getting the secret key and the access key')
         aws_access_key_id = os.getenv('ACCESSKEY')
@@ -88,7 +96,7 @@ def lambda_handler(event, context):
 
         s3 = boto3.client('s3',  aws_access_key_id = aws_access_key_id, aws_secret_access_key = aws_secret_access_key)
         current_date_str = datetime.now().strftime("%Y%m%d%H%M%S")
-        file_path = f'pdf/{str(current_date_str)}_sample.pdf'
+        file_path = f'pdf/{str(current_date_str)}_{name}_ticket.pdf'
         try:
             s3.upload_file(fileName, bucket_name, file_path)
         except Exception as err:
