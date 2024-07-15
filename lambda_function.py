@@ -49,11 +49,12 @@ def lambda_handler(event, context):
     if http_method == "GET":
         
         query_params = event['queryStringParameters']
-        name = query_params.get('name')
+        client_name = query_params.get('name')
+        employee_name = query_params.get('employeeName')
         bucket_name = os.getenv('Bucket_Name')
         
         logger.info(f'bucket_name = {bucket_name}')
-        mydict = { "name": name, "address": "Highway 38", 'used': False }
+        mydict = { "name": client_name, "employeeName": employee_name, 'used': False }
 
         logger.info('Getting the secret key and the access key')
         aws_access_key_id = os.getenv('ACCESSKEY')
@@ -68,7 +69,7 @@ def lambda_handler(event, context):
         subTitle = 'Purchase'
         textLines = [
             'Purchase completed successfully',
-            f'name: {name}',
+            f'name: {client_name}',
             'Price: 20€',
         ]
         image = '/tmp/teste.png'
@@ -92,7 +93,7 @@ def lambda_handler(event, context):
 
         s3 = boto3.client('s3',  aws_access_key_id = aws_access_key_id, aws_secret_access_key = aws_secret_access_key)
         current_date_str = datetime.now().strftime("%Y%m%d%H%M%S")
-        file_path = f'pdf/{str(current_date_str)}{str(x.inserted_id)}_{name.replace(' ', '_')}_ticket.pdf'
+        file_path = f'pdf/{str(current_date_str)}{str(x.inserted_id)}_{client_name.replace(' ', '_')}_ticket.pdf'
         try:
             s3.upload_file(fileName, bucket_name, file_path)
         except Exception as err:
