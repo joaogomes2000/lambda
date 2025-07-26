@@ -5,5 +5,6 @@ WORKDIR /app
 COPY . .
 
 RUN pip install fastapi uvicorn
+RUN pip install sqlalchemy
 
 CMD ["uvicorn", "lambda_function:app", "--host", "0.0.0.0", "--port", "80"]

@@ -129,10 +129,30 @@ def lambda_handler(event, context):
         return verify_qrcode(_id)
 '''
 from fastapi import FastAPI
+from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy.orm import declarative_base, sessionmaker
 
 app = FastAPI()
+
+Base = declarative_base()
+
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+
+engine = create_engine("postgresql+psycopg2://postgres:JpMg_2000@db.qlomonqglusxhrbhdezx.supabase.co:5432/postgres")
+Session = sessionmaker(bind=engine)
+
+Base.metadata.create_all(engine)
+
+
     
 @app.get("/")
 def root(name: str = "world"):
+    session = Session()
+    new_user = User(name=name)
+    session.add(new_user)
+    session.commit()
     return {"message": f"Hello {name}"}
 
