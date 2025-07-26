@@ -143,7 +143,7 @@ class User(Base):
 
 engine = create_engine(
     "postgresql+psycopg2://postgres:JpMg_2000@db.qlomonqglusxhrbhdezx.supabase.co:5432/postgres",
-    connect_args={"sslmode": "require"}
+    connect_args={"host": "db.qlomonqglusxhrbhdezx.supabase.co"}
 )
 Session = sessionmaker(bind=engine)
 session = Session()
