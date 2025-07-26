@@ -18,3 +18,4 @@ phases:
       - echo "Updating lambda function ..."
       - aws lambda update-function-code --function-name generate_qrcode --zip-file fileb://deployment_package.zip
       - echo "DONE!!"
+      
