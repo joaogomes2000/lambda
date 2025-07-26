@@ -131,8 +131,8 @@ def lambda_handler(event, context):
 from fastapi import FastAPI
 
 app = FastAPI()
-
+    
 @app.get("/")
-def root():
-    return {"message": "hello world"}
+def root(name: str = "world"):
+    return {"message": f"Hello {name}"}
 
