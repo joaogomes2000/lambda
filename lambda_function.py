@@ -128,5 +128,11 @@ def lambda_handler(event, context):
         logger.info(f'id: {_id}')  
         return verify_qrcode(_id)
 '''
-while True:
-    print('hello world')
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+def root():
+    return {"message": "hello world"}
+
