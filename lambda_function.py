@@ -141,16 +141,16 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
 
-engine = create_engine("postgresql+psycopg2://postgres:JpMg_2000@db.qlomonqglusxhrbhdezx.supabase.co:5432/postgres")
+engine = create_engine("postgresql://postgres:JpMg_2000@db.qlomonqglusxhrbhdezx.supabase.co:5432/postgres")
 Session = sessionmaker(bind=engine)
-
+session = Session()
 Base.metadata.create_all(engine)
 
 
     
 @app.get("/")
 def root(name: str = "world"):
-    session = Session()
+   
     new_user = User(name=name)
     session.add(new_user)
     session.commit()
