@@ -1,6 +1,9 @@
 FROM python:3.11-slim
 
 WORKDIR /app
-COPY lambda_function.py .
 
-CMD ["python", "lambda_function.py"]
+COPY . .
+
+RUN pip install fastapi uvicorn
+
+CMD ["uvicorn", "lambda_function:app", "--host", "0.0.0.0", "--port", "80"]
