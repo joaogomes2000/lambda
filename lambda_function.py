@@ -131,9 +131,10 @@ def lambda_handler(event, context):
 from fastapi import FastAPI
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import declarative_base, sessionmaker
+from psycopg2 import connect
+import socket
 
 app = FastAPI()
-
 Base = declarative_base()
 
 class User(Base):
@@ -141,21 +142,27 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
 
-engine = create_engine(
-    "postgresql+psycopg2://postgres:JpMg_2000@db.qlomonqglusxhrbhdezx.supabase.co:5432/postgres",
-    connect_args={"host": "db.qlomonqglusxhrbhdezx.supabase.co"}
-)
+def connect_ipv4():
+    return connect(
+        dbname="postgres",
+        user="postgres",
+        password="JpMg_2000",
+        host="db.qlomonqglusxhrbhdezx.supabase.co",
+        port=5432,
+        family=socket.AF_INET  # ⚠️ Aqui forçamos o IPv4
+    )
+
+engine = create_engine("postgresql+psycopg2://", creator=connect_ipv4)
 Session = sessionmaker(bind=engine)
 session = Session()
+
 Base.metadata.create_all(engine)
 
-
-    
 @app.get("/")
 def root(name: str = "world"):
-   
     new_user = User(name=name)
     session.add(new_user)
     session.commit()
     return {"message": f"Hello {name}"}
+
 
