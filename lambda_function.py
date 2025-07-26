@@ -1,4 +1,4 @@
-import json
+'''import json
 import os
 import logging
 import segno
@@ -127,3 +127,6 @@ def lambda_handler(event, context):
         _id = body.get('id')
         logger.info(f'id: {_id}')  
         return verify_qrcode(_id)
+'''
+while True:
+    print('hello world')
