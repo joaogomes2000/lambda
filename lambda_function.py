@@ -140,6 +140,12 @@ class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True)
     name = Column(String)
+    
+
+class Applications(Base):
+    __tablename__ = "applications"
+    id = Column(Integer, primary_key=True)
+    app_name = Column(String)
 
 engine = create_engine(
     "postgresql+psycopg2://postgres:JpMg_2000@db.qlomonqglusxhrbhdezx.supabase.co:5432/postgres"
