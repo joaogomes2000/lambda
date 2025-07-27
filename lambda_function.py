@@ -129,40 +129,40 @@ def lambda_handler(event, context):
         return verify_qrcode(_id)
 '''
 from fastapi import FastAPI
-from sqlalchemy import create_engine, Column, Integer, String
-from sqlalchemy.orm import declarative_base, sessionmaker
+#from sqlalchemy import create_engine, Column, Integer, String
+#from sqlalchemy.orm import declarative_base, sessionmaker
 from mangum import Mangum  # Adiciona o adaptador
 
 app = FastAPI()
 
-Base = declarative_base()
+#Base = declarative_base()
 
-class User(Base):
-    __tablename__ = "users"
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
+#class User(Base):
+#    __tablename__ = "users"
+#    id = Column(Integer, primary_key=True)
+#    name = Column(String)
     
 
-class Applications(Base):
-    __tablename__ = "applications"
-    id = Column(Integer, primary_key=True)
-    app_name = Column(String)
+#class Applications(Base):
+#    __tablename__ = "applications"
+#    id = Column(Integer, primary_key=True)
+#    app_name = Column(String)
 
-engine = create_engine(
-    "postgresql+psycopg2://postgres:JpMg_2000@db.qlomonqglusxhrbhdezx.supabase.co:5432/postgres"
-)
-Session = sessionmaker(bind=engine)
-session = Session()
-Base.metadata.create_all(engine)
+#engine = create_engine(
+#    "postgresql+psycopg2://postgres:JpMg_2000@db.qlomonqglusxhrbhdezx.supabase.co:5432/postgres"
+#)
+#Session = sessionmaker(bind=engine)
+#session = Session()
+#Base.metadata.create_all(engine)
 
 
     
 @app.get("/")
 def root(name: str = "world"):
    
-    new_user = User(name=name)
-    session.add(new_user)
-    session.commit()
+#    new_user = User(name=name)
+#    session.add(new_user)
+#    session.commit()
     return {"message": f"Hello {name}"}
 
 handler = Mangum(app)
