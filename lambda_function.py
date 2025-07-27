@@ -131,6 +131,7 @@ def lambda_handler(event, context):
 from fastapi import FastAPI
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import declarative_base, sessionmaker
+from mangum import Mangum  # Adiciona o adaptador
 
 app = FastAPI()
 
@@ -163,4 +164,6 @@ def root(name: str = "world"):
     session.add(new_user)
     session.commit()
     return {"message": f"Hello {name}"}
+
+handler = Mangum(app)
 
